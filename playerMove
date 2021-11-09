@@ -1,0 +1,65 @@
+using UnityEngine;
+
+public class CharacterMove : MonoBehaviour
+{
+    public static float playerSpeed = 5f;
+    //private float _speed = 10f;
+    [SerializeField]private float Jumpforce = 7f;  // тут надо покрутить силу прыжка 
+    Rigidbody2D rb;
+    public bool OnGround;
+    public Transform isground; // сделай пустой обьект и поставь к ногам перса, проверка на то что он стоит на полу
+    public float checkground = 0.5f;
+    public LayerMask Ground; // сделай слой земли и на него добавляй все с чем мы будем взаимодействовать ногами
+    private SpriteRenderer _sprite;
+    Animator anim;
+
+    public void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        _sprite = GetComponentInChildren<SpriteRenderer>();
+        anim = GetComponent<Animator>();
+    }
+
+    public void Update()
+    {
+        transform.Translate(playerSpeed * Time.deltaTime, 0f, 0f);  //makes player run
+        
+        CheckGround();
+
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Crouch();
+        }
+        if (Input.GetKeyDown(KeyCode.Space) && OnGround == true)
+        {
+            Jump();
+        }
+
+        anim.SetBool("Jump", OnGround);
+
+    }
+    
+
+    private void Jump()
+    {
+        rb.AddForce(Vector2.up * Jumpforce * 50);
+        
+
+    }
+    private void Crouch()
+    {
+        Physics2D.IgnoreLayerCollision(4, 5, true); // тут поставь слои где будут платформы
+        Invoke("IgnoreLayerOff", 0.5f);
+    }
+    void CheckGround()
+    {
+        OnGround = Physics2D.OverlapCircle(isground.position, checkground, Ground);
+    }
+    void IgnoreLayerOff()
+    {
+        Physics2D.IgnoreLayerCollision(4, 5, false);
+    }
+
+
+}
