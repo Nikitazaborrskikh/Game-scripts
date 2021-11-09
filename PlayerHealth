@@ -1,0 +1,43 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class Health : MonoBehaviour
+{
+    [SerializeField] private GameObject _player;       
+    public int health;
+    public int maxHealth;   
+
+    private void Awake()    
+    {
+        _player.SetActive(true);
+    }
+   
+    public void TakeHit(int Damage)
+    {
+        GetComponent<Animator>().SetBool("Ranenie", true);
+        health -= Damage;        
+        if (health <= 0)
+        {
+            SceneManager.LoadScene(4);
+            _player.SetActive(false);
+        }
+        StartCoroutine(TestCoroutine());
+    }
+
+    IEnumerator TestCoroutine()
+    {
+         yield return new WaitForSeconds(.1f);
+         GetComponent<Animator>().SetBool("Ranenie", false);
+    }
+
+    public void SetHealth(int BonusHealth)
+    {
+        health += BonusHealth;        
+        if (health > maxHealth)
+        {           
+            health = maxHealth;
+        }
+    }  
+}
