@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CollisionDamage : MonoBehaviour
+{
+    public int _collisionDamage = 10;
+    public string CollisionTag;
+
+   
+
+    private void Start()
+    {
+        
+    }
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.tag == CollisionTag)
+    //    {
+    //        Health health = collision.gameObject.GetComponent<Health>();
+    //        health.TakeHit(_collisionDamage);
+
+    //    }
+    //}
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == CollisionTag)
+        {
+            Health health = collision.gameObject.GetComponent<Health>();
+            health.TakeHit(_collisionDamage);
+            Debug.Log(health.health);
+            Destroy(gameObject);
+        }
+    }
+}
