@@ -1,0 +1,32 @@
+using UnityEngine;
+
+public class ParallaxBackGround : MonoBehaviour
+{
+    [SerializeField] Transform followTarget;
+    [SerializeField, Range(0f, 1f)] float paralaxStrenght = 0.1f;
+    [SerializeField] bool disableVerticalParallax;
+    Vector3 targetPreviousPosition;
+    private Vector3 Vector3;
+
+    private void Awake()
+    {
+        if (!followTarget)
+        {
+            followTarget = Camera.main.transform;
+        }
+        targetPreviousPosition = followTarget.position;
+    }
+
+    private void FixedUpdate()
+    {
+        var delta = followTarget.position - targetPreviousPosition;
+
+        if (disableVerticalParallax)
+        {
+            delta.y = 0;
+        }
+        targetPreviousPosition = followTarget.position;
+
+        transform.position += delta * paralaxStrenght;
+    }
+}
